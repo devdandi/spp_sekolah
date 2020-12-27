@@ -1,0 +1,181 @@
+<div class="card">
+            <div class="container-fluid">
+            <form method="post" action="{{ route('orangtua.store') }}">
+            @csrf
+            <div class="form-group">
+                <label for="exampleInputEmail1">Nomor Kartu Keluarga</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="no_kk" placeholder="Masukan nama">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Nama Suami</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="nama_suami" placeholder="Masukan nama">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Nama Istri</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="nama_istri" placeholder="Masukan nama">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Alamat Email</label>
+                <input type="text" class="form-control @error('title') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Masukan Email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Tanggal Lahir Suami</label>
+                <input type="date" style="width: 150px;" class="form-control @error('tanggallahir') is-invalid @enderror" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Masukan Email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Hak Akses</label>
+                <select name="level" id="" class="form-control">
+                    <option value="Pilih">Pilih</option>
+                    @foreach($level as $levels)
+                        @if($levels->status === 1)
+                            <option value="{{ $levels->id }}">{{ $levels->keterangan }}</option>
+                        @endif
+                        
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <p>Otomatis terkirim ke email <span style="color: green;" class="email"></span></p>
+            </div>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+            </form>
+            </div>
+        </div>
+
+
+
+
+        /// backup 2
+
+        @extends('layouts.admin')
+@section('judul','Tambah Orang Tua')
+@section('content')
+<div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Tambah Orang Tua</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Tambah Orang Tua</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+      @if($msg = session('success'))
+      <div class="alert alert-success" role="alert">
+         {{ $msg }}
+        </div>
+        @elseif($msg = session('error'))
+        <div class="alert alert-danger" role="alert">
+            {{ $msg }}
+        </div>
+      @endif
+      <div class="card p-2">
+        <div class="input-group mb-3">
+            <input type="text" id="kk_num_search" class="form-control" placeholder="Cari atau tambah nomor kk  " aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                <button id="submits" class="input-group-text btn btn-primary" id="basic-addon2">Submit</button>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <!-- <th scope="col">#</th> -->
+                    <th scope="col">Nomor KK</th>
+                    <th scope="col">Nomor NIK</th>
+                    <th scope="col">Nama</th>
+                    <th scope="col">Tempat Lahir</th>
+                    <th scope="col">Tanggal Lahir</th>
+                    <th scope="col">Keterangan</th>
+                    <th>Opsi</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+               <tr>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <button id="add_form" class="btn btn-primary">+</button>
+                    </td>
+               </tr>
+            </tbody>
+            </table>
+
+      </div>
+      
+    </div>
+</div>
+
+<script>
+    $(document).ready( () => {
+        var kk_num_search = $('#kk_num_search')
+        $('#submits').on('click', () => {
+            $.ajax({
+                url: "{{ route('api.kk_num.search') }}",
+                type: "POST",
+                data: {
+                    _token: $("meta[name='csrf-token']").attr('content'),
+                    kk_num: kk_num_search.val()
+                },
+                success: (data) => {
+                    
+                }
+            })
+        })
+        $('#add_form').on('click', () => {
+            $('#tbody').append(`
+            <tr id="tr_del">
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control">
+                    </td>
+                    <td>
+                        <button id="delete_form" onclick="delete_form(this)" class="btn btn-primary">-</button>
+                    </td>
+               </tr>
+            `)
+        })
+       
+    })
+    function delete_form(el)
+    {
+        $('#tr_del').remove()
+    }
+</script>
+@endsection
