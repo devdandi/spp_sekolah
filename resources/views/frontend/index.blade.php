@@ -4,7 +4,7 @@
 <div class="container valign">
     <div class="card mt-1">
         <div class="card-header">
-            Ringkasan <form action="{{ route('user.logout') }}" method="post">@csrf <button onclick="return confirm('Keluar ? ') " class="btn btn-danger">Keluar</button></form>
+            Ringkasan
         </div>
         <div class="card-body text-center">
         @if($total > 0)

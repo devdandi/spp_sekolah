@@ -119,4 +119,11 @@ class FrontController extends Controller
         $detail = $this->transaction->where('snap_token', $snap_token)->where('status', '!=' ,'success')->firstOrFail();
         return view('frontend.tagihan.pending', compact('detail'));
     }
+    public function transaction()
+    {
+        $success = $this->transaction->where('parent_id', Auth::id())->where('status', 'success')->orderBy('created_at','ASC')->paginate(20);
+        $pending = $this->transaction->where('parent_id', Auth::id())->where('status', 'waiting_payment')->orderBy('created_at','ASC')->paginate(20);
+        $failure = $this->transaction->where('parent_id', Auth::id())->where('status', 'failure')->orderBy('created_at','ASC')->paginate(20);
+        return view('frontend.transaksi.index', compact('success','pending','failure'));
+    }
 }

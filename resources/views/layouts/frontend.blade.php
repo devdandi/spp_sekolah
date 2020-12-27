@@ -19,10 +19,27 @@
       <!-- Image and text -->
       <nav class="navbar navbar-dark bg-blue">
         <div class="valign">
+        <div class="float-left">
         <a class="navbar-brand" href="{{ route('user.index') }}">
           <img src="https://getbootstrap.com//docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
           Bootstrap
         </a>
+        </div>
+        <div class="float-right">
+
+        <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" style="color:white;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Akun Saya
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Pengaturan</a>
+            <a class="dropdown-item" href="{{ route('user.transaction') }}">Transaksi</a>
+            <a class="dropdown-item" href="#">Bantuan</a>
+          <div class="dropdown-divider"></div>
+            <form action="{{ route('user.logout') }}" method="post">@csrf <button onclick="return confirm('Keluar ? ') " class="btn btn-link text-blue">Keluar</button></form>
+        </div>
+        </div>
+        </div>
         </div>
       </nav>
         @yield('content')

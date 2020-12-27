@@ -146,6 +146,7 @@ class MidtransController extends Controller
         $json = json_encode($array);
         $save = Transaction::create([
             'order_id' => $time,
+            'parent_id' => Auth::id(),
             'tunggakan_id' => $json,
             'snap_token' => \Midtrans\Snap::getSnapToken($params),
             'subtotal' => $subtotal,

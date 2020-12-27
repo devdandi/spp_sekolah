@@ -29,15 +29,16 @@ Route::middleware('auth:parent')->group(function() {
         Route::get('/tagihan', [FrontController::class, 'tagihan'])->name('user.tagihan');
         Route::post('/logout', [FrontController::class, 'logout'])->name('user.logout');
     });
+    Route::prefix('transaksi/')->group(function() {
+        Route::get('/', [FrontController::class, 'transaction'])->name('user.transaction');
+    });
     Route::prefix('payment/')->group(function() {
         Route::post('/call', [FrontController::class, 'payment'])->name('user.payment');
         Route::get('/pilih-pembayaran/{snap}', [FrontController::class, 'show_payment'])->name('user.payment.show');
         Route::get('/berhasil/{snap_token}', [FrontController::class, 'payment_success'])->name('user.payment.success');
         Route::get('/gagal/{snap_token}', [FrontController::class, 'payment_failed'])->name('user.payment.failed');
         Route::get('/pending/{snap_token}', [FrontController::class, 'payment_pending'])->name('user.payment.pending');
-
-
-
+        
     });
 });
 

@@ -10,6 +10,7 @@ class Transaction extends Model
     use HasFactory;
     protected $fillable = [
         'order_id',
+        'parent_id',
         'tunggakan_id',
         'snap_token',
         'subtotal',
