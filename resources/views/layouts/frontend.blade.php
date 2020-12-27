@@ -36,7 +36,7 @@
             <a class="dropdown-item" href="{{ route('user.transaction') }}">Transaksi</a>
             <a class="dropdown-item" href="#">Bantuan</a>
           <div class="dropdown-divider"></div>
-            <form action="{{ route('user.logout') }}" method="post">@csrf <button onclick="return confirm('Keluar ? ') " class="btn btn-link text-blue">Keluar</button></form>
+            <form action="{{ route('logout') }}" method="post">@csrf <button onclick="return confirm('Keluar ? ') " class="btn btn-link text-blue">Keluar</button></form>
         </div>
         </div>
         </div>

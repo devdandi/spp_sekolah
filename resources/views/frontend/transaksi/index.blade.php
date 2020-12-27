@@ -4,7 +4,7 @@
 <div class="container valign">
     <div  class="card mt-1">
         <div class="card-body">
-        <h3>Daftar Transaksi</h3>
+        <h3> Daftar Transaksi</h3>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Berhasil</a>
@@ -65,6 +65,7 @@
                         <hr>
                         <h5>Subtotal: Rp. {{ number_format($failures->subtotal) }}</h5>
                     </li>
+                    
                     @empty
                     <p class="text-center">Tidak ada transaksi</p>
                 @endforelse

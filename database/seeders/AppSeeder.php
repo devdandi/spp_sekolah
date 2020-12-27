@@ -31,15 +31,15 @@ class AppSeeder extends Seeder
             'SUPERUSER'
         );
         // ADD LEVEL
-        if($this->level->count() <= 0)
-        {
-            for($i = 0; $i < count($level); $i++)
-            {
-                $this->level->create([
-                    'keterangan' => $level[$i]
-                ]);
-            }
-        }
+        // if($this->level->count() <= 0)
+        // {
+        //     for($i = 0; $i < count($level); $i++)
+        //     {
+        //         $this->level->create([
+        //             'keterangan' => $level[$i]
+        //         ]);
+        //     }
+        // }
         // END LEVEL
         
 

@@ -12,7 +12,7 @@ use App\Http\Controllers\FrontController;
 use App\Http\Controllers\NewsController;
 
 Route::get('/', [FrontController::class, 'show'])->name('user.show');
-Route::post('/login', [FrontController::class, 'login'])->name('user.login');
+Route::post('/login_user', [FrontController::class, 'login_post'])->name('user.login');
 
 
 Route::prefix('payment-gateway/midtrans/')->group(function() {
@@ -27,7 +27,7 @@ Route::middleware('auth:parent')->group(function() {
 
         Route::get('/siswa', [FrontController::class, 'siswa'])->name('user.siswa');
         Route::get('/tagihan', [FrontController::class, 'tagihan'])->name('user.tagihan');
-        Route::post('/logout', [FrontController::class, 'logout'])->name('user.logout');
+        Route::post('/logout_user', [FrontController::class, 'logout'])->name('user.logout');
     });
     Route::prefix('transaksi/')->group(function() {
         Route::get('/', [FrontController::class, 'transaction'])->name('user.transaction');

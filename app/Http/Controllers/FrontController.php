@@ -44,7 +44,7 @@ class FrontController extends Controller
         }
         return view('frontend.login.index');
     }
-    public function login(Request $req)
+    public function login_post(Request $req)
     {
         $cred = $req->only('email','password');
 
@@ -69,11 +69,11 @@ class FrontController extends Controller
     }
     public function logout(Request $req)
     {
-        if(Auth::logout()) 
+        if(Auth::guard('parent')->logout()) 
         {
-            $request->session()->invalidate();
+            $req->session()->invalidate();
 
-            $request->session()->regenerateToken();
+            $req->session()->regenerateToken();
             return redirect(route('user.show'));
         }
     }
