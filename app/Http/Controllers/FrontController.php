@@ -87,6 +87,14 @@ class FrontController extends Controller
     }
     public function show_payment($snap)
     {
+        if(isset($_GET['transaction_status'])){
+            $status = $_GET['transaction_status'];
+            if($status === 'pending')
+            {
+                return redirect(route('user.payment.pending', $snap));
+            }
+        }
+
         if($snap === null)
         {
             return redirect()->back()->with(['error' => 'ada kesalahan ']);
@@ -105,7 +113,10 @@ class FrontController extends Controller
     {
         $detail = $this->transaction->where('snap_token', $snap_token)->where('status', '!=' ,'success')->firstOrFail();
         return view('frontend.tagihan.failure', compact('detail'));
-
-
+    }
+    public function payment_pending($snap_token)
+    {
+        $detail = $this->transaction->where('snap_token', $snap_token)->where('status', '!=' ,'success')->firstOrFail();
+        return view('frontend.tagihan.pending', compact('detail'));
     }
 }
