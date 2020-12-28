@@ -22,12 +22,18 @@ Route::prefix('payment-gateway/midtrans/')->group(function() {
 
 Route::middleware('auth:parent')->group(function() {
     Route::prefix('user/')->group(function() {
+        Route::prefix('pemberitahuan/')->group(function(){
+            Route::get('/{slug}', [FrontController::class, 'read'])->name('pemberitahuan.index');
+        });
     
         Route::get('/home', [FrontController::class, 'index'])->name('user.index');
 
         Route::get('/siswa', [FrontController::class, 'siswa'])->name('user.siswa');
         Route::get('/tagihan', [FrontController::class, 'tagihan'])->name('user.tagihan');
         Route::post('/logout_user', [FrontController::class, 'logout'])->name('user.logout');
+
+        Route::get('/update-user', [FrontController::class, 'show_update'])->name('user.show.update');
+        Route::post('/update-user', [FrontController::class, 'update'])->name('user.update');
     });
     Route::prefix('transaksi/')->group(function() {
         Route::get('/', [FrontController::class, 'transaction'])->name('user.transaction');
@@ -40,6 +46,7 @@ Route::middleware('auth:parent')->group(function() {
         Route::get('/pending/{snap_token}', [FrontController::class, 'payment_pending'])->name('user.payment.pending');
         
     });
+
 });
 
 Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(function() {
@@ -68,6 +75,8 @@ Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(funct
         Route::post('/laporan/tunggakan/count', [APIController::class, 'count_tunggakan'])->name('api.tunggakan.count');
         Route::post('/laporan/pembayaran/count', [APIController::class, 'count_pembayaran'])->name('api.pembayaran.count');
         Route::post('/laporan/siswa/count', [APIController::class, 'count_siswa'])->name('api.siswa.count');
+        Route::post('/laporan/pembayaran/failure/count', [APIController::class, 'count_failure_payment'])->name('api.payment.failure.count');
+
     });
     Route::prefix('tagihan/')->group(function(){
         Route::get('/{parent_id}', [TagihanController::class, 'index'])->name('tagihan.index');
@@ -90,5 +99,9 @@ Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(funct
     });
     Route::prefix('berita/')->group(function() {
         Route::get('/', [NewsController::class, 'index'])->name('news.index');
+        Route::post('/berita-create', [NewsController::class, 'store'])->name('news.create');
+        Route::get('/berita-create', [NewsController::class, 'show'])->name('news.show');
+        Route::post('/berita-delete/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+
     });
 });

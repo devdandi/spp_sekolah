@@ -9,14 +9,14 @@
         <div class="card-body text-center">
         @if($total > 0)
         <div class="alert alert-warning" role="alert">
-            Tagihan bulan ini telah keluar
+            Tagihan bulan {{date('M Y')}}
         </div>
         @else
         <div class="alert alert-success" role="alert">
             Tidak ada tagihan
         </div>
         @endif
-        
+         
            <div class="row">
                <div class="col-6">
                    <div class="card-none">
@@ -39,17 +39,23 @@
            
         </div>
     </div>
-
     <small><b>Pemberitahuan</b></small>
     <div class="card mt-1">
         <div class="card-body">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
+            <ul class="list-group list-group-flush">
+                @foreach($new as $num => $news)
+                <li class="list-group-item">
+                <h5><a href="{{ route('pemberitahuan.index', $news->slug) }}">{{ $news->title }}</a></h5>
+                        <div class="float-right">
+                            <small>
+                                <i>{{ date('Y/m/d', strtotime($news->created_at)) }}</i>
+                            </small>
+                        </div>
+                        <hr>
+                        <h5></h5>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </div>
 </div>

@@ -76,7 +76,7 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>0</h3>
+                <h3 id="payment_failed">0</h3>
 
                 <p>Pembayaran Gagal</p>
               </div>
@@ -174,6 +174,23 @@
             },
             beforeSend: () => {
                 $("#siswa").text("Loading")
+            }
+
+            
+        })
+
+        $.ajax({
+            url: "{{ route('api.payment.failure.count') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}"
+            },
+            success: (data) => {
+                // console.log(data)
+                $("#payment_failed").text(data)
+            },
+            beforeSend: () => {
+                $("#payment_failed").text("Loading")
             }
         })
   </script>

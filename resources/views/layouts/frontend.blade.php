@@ -26,20 +26,24 @@
         </a>
         </div>
         <div class="float-right">
-
+        @if(Auth::guard('parent')->check())
         <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" style="color:white;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Akun Saya
-        </a>
+          <a class="nav-link dropdown-toggle" style="color:white;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Akun Saya
+          </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Pengaturan</a>
+            <a class="dropdown-item" href="{{ route('user.show.update') }}">Pengaturan</a>
             <a class="dropdown-item" href="{{ route('user.transaction') }}">Transaksi</a>
-            <a class="dropdown-item" href="#">Bantuan</a>
-          <div class="dropdown-divider"></div>
-            <form action="{{ route('logout') }}" method="post">@csrf <button onclick="return confirm('Keluar ? ') " class="btn btn-link text-blue">Keluar</button></form>
-        </div>
-        </div>
-        </div>
+              <!-- <a class="dropdown-item" href="#">Bantuan</a> -->
+              <div class="dropdown-divider"></div>
+                @if(Auth::guard('parent')->check())
+                <form action="{{ route('logout') }}" method="post">@csrf <button onclick="return confirm('Keluar ? ') " class="btn btn-link text-blue">Keluar</button></form>
+                @endif
+              </div>
+            </div>
+          </div>
+          @endif
+        
         </div>
       </nav>
         @yield('content')

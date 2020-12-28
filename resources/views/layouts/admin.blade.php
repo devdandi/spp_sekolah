@@ -223,6 +223,30 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
+                Pengumuman
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+    
+              <li class="nav-item">
+                <a href="{{ route('news.show') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tambah Pengumuman</p>
+                </a>
+              </li> 
+              <li class="nav-item">
+                <a href="{{ route('news.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Daftar Pengumuman</p>
+                </a>
+              </li>      
+            </ul>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
                 Menu Sekolah
                 <i class="fas fa-angle-left right"></i>
                 <span class="badge badge-info right">2</span>

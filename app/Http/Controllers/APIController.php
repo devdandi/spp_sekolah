@@ -8,6 +8,7 @@ use App\Models\DetailKK;
 use App\Models\Tunggakan;
 use App\Models\Parents;
 use App\Models\Student;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,10 +16,11 @@ use Illuminate\Support\Facades\Cache;
 
 class APIController extends Controller
 {
-    protected $kknum, $detailkk, $tunggakan, $student;
+    protected $kknum, $detailkk, $tunggakan, $student, $transaksi;
 
-    function __construct(KKNum $kknum, DetailKK $detailkk, Tunggakan $tunggakan, Student $student)
+    function __construct(KKNum $kknum, DetailKK $detailkk, Tunggakan $tunggakan, Student $student, Transaction $transaksi)
     {
+        $this->transaksi = $transaksi;
         $this->student = $student;
         $this->tunggakan = $tunggakan;
         $this->kknum = $kknum;
@@ -69,6 +71,12 @@ class APIController extends Controller
     {
         return Cache::remember('count_siswa', 5, function() {
             return $this->student->whereNotNull('nisn')->count();
+        });
+    }
+    public function count_failure_payment(Request $req)
+    {
+        return Cache::remember('count_failure_payment', 5, function() {
+            return $this->transaksi->where('status', 'failure')->count();
         });
     }
 }

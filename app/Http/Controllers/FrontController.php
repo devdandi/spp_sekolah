@@ -7,14 +7,14 @@ use App\Models\Parents;
 use App\Models\Student;
 use App\Models\Tunggakan;
 use App\Models\Transaction;
+use App\Models\News;
+
 use App\Models\Midtrans as MidtransModel;
 use Illuminate\Support\Facades\Storage;
-
-
-
 use Illuminate\Support\Facades\Auth;
 use Midtrans;
 use App\Http\Controllers\MidtransController;
+use Illuminate\Support\Facades\Hash;
 
 
 class FrontController extends Controller
@@ -22,19 +22,22 @@ class FrontController extends Controller
     protected $parent,
               $student,
               $tunggakan,
+              $news,
               $transaction;
-    function __construct(Parents $p, Student $s, Tunggakan $t, Transaction $ts)
+    function __construct(Parents $p, Student $s, Tunggakan $t, Transaction $ts, News $n)
     {
         $this->transaction = $ts;
         $this->parent = $p;
         $this->student = $s;
         $this->tunggakan = $t;
+        $this->news = $n;
     }
     public function index()
     {
         $total = 0;
         $total += $this->tunggakan->where('parent_id', Auth::id())->where('status', 'no_paid')->sum('total');
-        return view('frontend.index', compact('total'));
+        $new = $this->news->paginate(10);
+        return view('frontend.index', compact('total','new'));
     }
     public function show()
     {
@@ -94,7 +97,6 @@ class FrontController extends Controller
                 return redirect(route('user.payment.pending', $snap));
             }
         }
-
         if($snap === null)
         {
             return redirect()->back()->with(['error' => 'ada kesalahan ']);
@@ -125,5 +127,29 @@ class FrontController extends Controller
         $pending = $this->transaction->where('parent_id', Auth::id())->where('status', 'waiting_payment')->orderBy('created_at','ASC')->paginate(20);
         $failure = $this->transaction->where('parent_id', Auth::id())->where('status', 'failure')->orderBy('created_at','ASC')->paginate(20);
         return view('frontend.transaksi.index', compact('success','pending','failure'));
+    }
+    public function update(Request $req)
+    {
+
+        $update = $this->parent->find(Auth::id());
+        $update->password = Hash::make($req->password);
+        if($update->save())
+        {
+            return redirect()->back()->with(['success' => 'berhasil di perbarui !']);
+        }else{
+            return redirect()->back()->with(['error' => 'gagal di perbarui !']);
+
+        }
+    }
+    public function show_update()
+    {
+        $user = $this->parent->find(Auth::id());
+        return view('frontend.login.update', compact('user'));
+    }
+    public function read($slug)
+    {
+        $new = $this->news->where('slug', $slug)->firstOrFail();
+        // dd($new);
+        return view('frontend.news.index', compact('new'));
     }
 }
