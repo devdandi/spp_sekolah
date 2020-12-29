@@ -36,7 +36,7 @@ class FrontController extends Controller
     {
         $total = 0;
         $total += $this->tunggakan->where('parent_id', Auth::id())->where('status', 'no_paid')->sum('total');
-        $new = $this->news->paginate(10);
+        $new = $this->news->paginate(3);
         return view('frontend.index', compact('total','new'));
     }
     public function show()
@@ -68,6 +68,7 @@ class FrontController extends Controller
     public function tagihan()
     {
         $tagihan = $this->tunggakan->where('parent_id', Auth::id())->where('status', 'no_paid')->get();
+        // $client_key = new MidtransController;
         return view('frontend.tagihan.index', compact('tagihan'));
     }
     public function logout(Request $req)
@@ -95,6 +96,9 @@ class FrontController extends Controller
             if($status === 'pending')
             {
                 return redirect(route('user.payment.pending', $snap));
+            }else if($status === 'success' || $status == 'capture')
+            {
+                return redirect(route('user.payment.success', $snap));
             }
         }
         if($snap === null)
@@ -106,7 +110,7 @@ class FrontController extends Controller
     }
     public function payment_success($snap_token)
     {
-        $detail = $this->transaction->where('snap_token', $snap_token)->where('status','success')->firstOrFail();
+        $detail = $this->transaction->where('snap_token', $snap_token)->where('status','success')->orWhere('status','capture')->firstOrFail();
         return view('frontend.tagihan.success', compact('detail'));
 
 
@@ -123,9 +127,9 @@ class FrontController extends Controller
     }
     public function transaction()
     {
-        $success = $this->transaction->where('parent_id', Auth::id())->where('status', 'success')->orderBy('created_at','ASC')->paginate(20);
-        $pending = $this->transaction->where('parent_id', Auth::id())->where('status', 'waiting_payment')->orderBy('created_at','ASC')->paginate(20);
-        $failure = $this->transaction->where('parent_id', Auth::id())->where('status', 'failure')->orderBy('created_at','ASC')->paginate(20);
+        $success = $this->transaction->where('parent_id', Auth::id())->where('status', 'success')->orderBy('created_at','ASC')->paginate(5);
+        $pending = $this->transaction->where('parent_id', Auth::id())->where('status', 'waiting_payment')->orderBy('created_at','ASC')->paginate(5);
+        $failure = $this->transaction->where('parent_id', Auth::id())->where('status', 'failure')->orderBy('created_at','ASC')->paginate(5);
         return view('frontend.transaksi.index', compact('success','pending','failure'));
     }
     public function update(Request $req)

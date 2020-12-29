@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\KKNum;
 use App\Models\DetailKK;
 use App\Models\Tunggakan;
+use App\Models\Configuration;
 use App\Models\Parents;
 use App\Models\Student;
 use App\Models\Transaction;
@@ -16,10 +17,11 @@ use Illuminate\Support\Facades\Cache;
 
 class APIController extends Controller
 {
-    protected $kknum, $detailkk, $tunggakan, $student, $transaksi;
+    protected $kknum, $detailkk, $tunggakan, $student, $transaksi, $configuration;
 
-    function __construct(KKNum $kknum, DetailKK $detailkk, Tunggakan $tunggakan, Student $student, Transaction $transaksi)
+    function __construct(KKNum $kknum, DetailKK $detailkk, Tunggakan $tunggakan, Student $student, Transaction $transaksi, Configuration $configuration)
     {
+        $this->configuration = $configuration;
         $this->transaksi = $transaksi;
         $this->student = $student;
         $this->tunggakan = $tunggakan;
@@ -78,5 +80,21 @@ class APIController extends Controller
         return Cache::remember('count_failure_payment', 5, function() {
             return $this->transaksi->where('status', 'failure')->count();
         });
+    }
+    public function spp_update(Request $req)
+    {
+        $validate = $req->validate([
+            'spp_bulanan' => 'required'
+        ]);
+        $data = $this->configuration->find($req->id);
+        $data->spp_bulanan = $req->spp_bulanan;
+
+        if($data->save())
+        {
+            return redirect()->back()->with(['success' => 'Spp di berbarui ke ' . $req->spp_bulanan]);
+        }else{
+            return redirect()->back()->with(['error' => 'Spp di gagal berbarui']);
+
+        }
     }
 }

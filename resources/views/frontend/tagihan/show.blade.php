@@ -1,6 +1,11 @@
 @extends('layouts.frontend')
 @section('title', 'Sekolah KU DAN KAMU')
 @section('content')
+<script
+      type="text/javascript"
+      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      data-client-key="{{ \App\Models\Configuration::first()->client_key }}"
+    ></script>
 <div class="container valign">
     <div class="card mt-1 p-2">
         <div class="card-body">

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Configuration;
 use App\Models\Tunggakan;
 use App\Models\Transaction;
+use App\Models\Midtrans;
 
 use Auth;
 use App\Models\Parents;
@@ -13,12 +14,20 @@ use App\Models\Parents;
 class MidtransController extends Controller
 {
     protected $config;
-    protected static $tunggakan;
-    private $serverKey = "SB-Mid-server-qI9m7N32aAQ-apqqdxS2r8tM";
-    function __construct(Configuration $c, Tunggakan $t)
+    private static $isProduction;
+    protected $tunggakan;
+
+    function __construct(Configuration $c, Tunggakan $t, Transaction $ts)
     {
-        self::$tunggakan = $t;
+        $this->transaction = $ts;
+        $this->tunggakan = $t;
         $this->config = $c;
+        if($c->first()->production === 1)
+        {
+            self::$isProduction = true;
+        }else{
+            self::$isProduction = false;
+        }
     }
     public function index()
     {
@@ -95,40 +104,33 @@ class MidtransController extends Controller
             return false;
         }
     }
+    public static function getServerKey()
+    {
+        $config = new Configuration;
+        return $config->first()->secret_key;
+    }
+    public static function isProduction()
+    {
+        $config = new Configuration;
+        if($config->first()->production === 1)
+        {
+            return true;
+        }
+        return false;
+    }
     public static function getSnap($array)
     {
-        \Midtrans\Config::$serverKey = "SB-Mid-server-qI9m7N32aAQ-apqqdxS2r8tM";
+        // dd(self::isProduction());
+        $subtotal = 0;
+        \Midtrans\Config::$serverKey = self::getServerKey();
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
+        $config = new Configuration;
+        \Midtrans\Config::$isProduction = self::isProduction();
         // Set sanitization on (default)
         \Midtrans\Config::$isSanitized = true;
         // Set 3DS transaction for credit card to true
         \Midtrans\Config::$is3ds = true;
-        $subtotal = 0;
         
-        // $data = Tunggakan::whereIn('id', [1, 2])->get();
-        
-        // $params = array();
-        // $user = Parents::find(Auth::id());
-
-
-        // for($i = 0; $i < count($data); $i++)
-        // {
-        //     array_push($params, array(
-        //         'transaction_details' => array(
-        //             'order_id' => $data[$i]->id,
-        //             'gross_amount' =>  $data[$i]->total,
-        //         ),
-                
-        //     ));
-            
-        // }
-        // $snapToken = null;
-        // foreach($params as $paramss)
-        // {
-        //     $snapToken = \Midtrans\Snap::getSnapToken($paramss);
-        // }
-        // return $snapToken;
 
         $tunggakan = Tunggakan::whereIn('id', $array)->get();
         foreach($tunggakan as $tunggakans)
@@ -167,6 +169,7 @@ class MidtransController extends Controller
         $fraud = $notif['fraud_status'];
         $orderid = $notif['order_id'];
 
+        Midtrans::create(['json' => json_encode($notif)]);
         // Storage::disk('local')->put('callback.txt', $notif['order_id']);
 
         $get = $this->transaction->where('order_id', $orderid)->first();
@@ -189,20 +192,62 @@ class MidtransController extends Controller
                 $get->save();
             }
         }
+        else if($transaction == 'pending'){
+            if($fraud == 'accept')
+            {
+                $get->status = "pending";
+                $get->payment_type = $notif['payment_type'];
+                $get->save();
+            }
+        }
+        else if($transaction == 'capture')
+        {
+            if($fraud == 'accept')
+            {
+                $get->status = "capture";
+                $get->payment_type = $notif['payment_type'];
+                $tunggakan_id = json_decode($get->tunggakan_id);
+                $update_tr = $this->tunggakan->whereIn('id', $tunggakan_id)->update([
+                    'status' => 'paid',
+                    'updated_at' => now()
+                ]);
+                $get->save();
+            }
+        }
+        else if($transaction == 'expire')
+        {
+            if($fraud == 'accept')
+            {
+                $get->status = "expire";
+                $get->payment_type = $notif['payment_type'];
+
+                $get->save();
+            }
+        }
         else if ($transaction == 'cancel') {
-            if ($fraud == 'challenge') {
+            if ($fraud == 'accept') {
                 $get->status = "failure";
+                $get->payment_type = $notif['payment_type'];
+
                 $get->save();
             }
             else if ($fraud == 'accept') {
                 $get->status = "failure";
+                $get->payment_type = $notif['payment_type'];
+
                 $get->save();
             }
         }
         else if ($transaction == 'deny') {
             $get->status = "failure";
+            $get->payment_type = $notif['payment_type'];
             $get->save();
         }
 
+    }
+    public function callback_show()
+    {
+        $callback = $this->midtrans->paginate(10);
+        return view('admin.midtrans.show', compact('callback'));
     }
 }

@@ -47,7 +47,7 @@ class ReportController extends Controller
     }
     public function filter_tanggal(Request $req)
     {
-        $tunggakan = $this->tunggakan->whereBetween('created_at', [$req->dari, $req->sampai])->paginate(10);
+        $tunggakan = $this->tunggakan->whereBetween('updated_at', [$req->dari, $req->sampai])->paginate(10);
         return view('admin.laporan.filter', compact('tunggakan'));
     }
 }

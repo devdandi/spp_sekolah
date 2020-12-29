@@ -24,12 +24,12 @@
                         <b><a href="#">#{{ $successed->order_id }}</a></b>
                         <div class="float-right">
                             <small>
-                                <i>{{ date('Y/m/d', strtotime($successed->created_at)) }}</i>
+                                <i>{{ date('Y/m/d H:i', strtotime($successed->created_at)) }}</i>
                             </small>
                         </div>
                         <hr>
-
-                        <h5>Subtotal: Rp. {{ number_format($successed->subtotal) }}</h5>
+                        <small>({{$successed->payment_type}})</small>
+                        <h5>Subtotal: Rp. {{ number_format($successed->subtotal) }} </h5>
 
                     </li>
                     @empty
@@ -43,10 +43,12 @@
                         <b><a href="{{ route('user.payment.show', $pendings->snap_token) }}">#{{ $pendings->order_id }}</a></b>
                         <div class="float-right">
                             <small>
-                                <i>{{ date('Y/m/d', strtotime($pendings->created_at)) }}</i>
+                                <i>{{ date('Y/m/d H:i', strtotime($pendings->created_at)) }}</i>
                             </small>
                         </div>
                         <hr>
+                        <small>({{$pendings->payment_type}})</small>
+
                         <h5>Subtotal: Rp. {{ number_format($pendings->subtotal) }}</h5>
                     </li>
                     @empty
@@ -59,11 +61,12 @@
                         <b><a href="#">#{{ $failures->order_id }}</a></b>
                         <div class="float-right">
                             <small>
-                                <i>{{ date('Y/m/d', strtotime($failures->created_at)) }}</i>
+                                <i>{{ date('Y/m/d H:i', strtotime($failures->created_at)) }}</i>
                             </small>
                         </div>
                         <hr>
                         <h5>Subtotal: Rp. {{ number_format($failures->subtotal) }}</h5>
+                        <small>({{$failures->payment_type}})</small>
                     </li>
                     
                     @empty

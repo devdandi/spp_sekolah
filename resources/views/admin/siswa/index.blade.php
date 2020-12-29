@@ -41,13 +41,13 @@
                           <td>{{ $student->nisn }}</td>
                         @endif
                         <td>{{ $student->kkdetail->name }}</td>
-                        @if($student->status === 1)
+                        @if($student->status === 1 && $student->class_id !== null || $student->nisn !== null)
                           <td><span style="background-color: green; padding: 3px; color: white; border-radius: 5px 5px 5px;">Aktif</span></td>
                         @else
                           <td><span style="background-color: red; padding: 3px; color: white; border-radius: 5px 5px 5px;">Tidak aktif</span></td>
                         @endif
                           <td>{{ $student->major->name }}</td>
-                        @if($student->class_id === null)
+                        @if($student->class_id === null || $student->nisn === null)
                           <td>Belum terdaftar</td>
                           @else
                           <td>{{ $student->class->classes . ' ' . $student->class->name}}</td>
@@ -59,6 +59,9 @@
             
                 </tbody>
             </table>
+            {{ $siswa->links() }}
+            <p><small>Jika siswa belum terdaftar kelas atau nisn maka status tidak aktif dan tagihan spp tidak akan keluar</small></p>
+
         </div>
     </div>
 </div>

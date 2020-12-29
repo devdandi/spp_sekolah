@@ -62,6 +62,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $parent->links()}}
         </div>
         <h4>Total: Rp. {{ number_format($total) }}</h4>
           

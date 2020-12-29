@@ -10,14 +10,15 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\MajorController;
+use App\Http\Controllers\ClassController;
+
 
 Route::get('/', [FrontController::class, 'show'])->name('user.show');
 Route::post('/login_user', [FrontController::class, 'login_post'])->name('user.login');
 
 
-Route::prefix('payment-gateway/midtrans/')->group(function() {
-    Route::post('/', [MidtransController::class, 'callback'])->name('midtrans.callback');
-});
+Route::post('/', [MidtransController::class, 'callback'])->name('midtrans.callback');
 
 
 Route::middleware('auth:parent')->group(function() {
@@ -34,18 +35,20 @@ Route::middleware('auth:parent')->group(function() {
 
         Route::get('/update-user', [FrontController::class, 'show_update'])->name('user.show.update');
         Route::post('/update-user', [FrontController::class, 'update'])->name('user.update');
+
+        Route::prefix('transaksi/')->group(function() {
+            Route::get('/', [FrontController::class, 'transaction'])->name('user.transaction');
+        });
+        Route::prefix('payment/')->group(function() {
+            Route::post('/call', [FrontController::class, 'payment'])->name('user.payment');
+            Route::get('/pilih-pembayaran/{snap}', [FrontController::class, 'show_payment'])->name('user.payment.show');
+            Route::get('/berhasil/{snap_token}', [FrontController::class, 'payment_success'])->name('user.payment.success');
+            Route::get('/gagal/{snap_token}', [FrontController::class, 'payment_failed'])->name('user.payment.failed');
+            Route::get('/pending/{snap_token}', [FrontController::class, 'payment_pending'])->name('user.payment.pending');
+            
+        });
     });
-    Route::prefix('transaksi/')->group(function() {
-        Route::get('/', [FrontController::class, 'transaction'])->name('user.transaction');
-    });
-    Route::prefix('payment/')->group(function() {
-        Route::post('/call', [FrontController::class, 'payment'])->name('user.payment');
-        Route::get('/pilih-pembayaran/{snap}', [FrontController::class, 'show_payment'])->name('user.payment.show');
-        Route::get('/berhasil/{snap_token}', [FrontController::class, 'payment_success'])->name('user.payment.success');
-        Route::get('/gagal/{snap_token}', [FrontController::class, 'payment_failed'])->name('user.payment.failed');
-        Route::get('/pending/{snap_token}', [FrontController::class, 'payment_pending'])->name('user.payment.pending');
-        
-    });
+
 
 });
 
@@ -77,6 +80,8 @@ Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(funct
         Route::post('/laporan/siswa/count', [APIController::class, 'count_siswa'])->name('api.siswa.count');
         Route::post('/laporan/pembayaran/failure/count', [APIController::class, 'count_failure_payment'])->name('api.payment.failure.count');
 
+        Route::post('/configuration/spp', [APIController::class, 'spp_update'])->name('api.spp.update');
+
     });
     Route::prefix('tagihan/')->group(function(){
         Route::get('/{parent_id}', [TagihanController::class, 'index'])->name('tagihan.index');
@@ -85,9 +90,9 @@ Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(funct
     });
     Route::prefix('laporan/')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('laporan.index');
-        Route::get('/laporan/fiter', [ReportController::class, 'filter'])->name('laporan.filter');
-        Route::post('/laporan/fiter/tanggal', [ReportController::class, 'filter_tanggal'])->name('laporan.filter.tanggal');
-        Route::post('/laporan/fiter/text', [ReportController::class, 'filter_txt'])->name('laporan.filter.text');
+        Route::get('/fiter', [ReportController::class, 'filter'])->name('laporan.filter');
+        Route::post('/fiter/tanggal', [ReportController::class, 'filter_tanggal'])->name('laporan.filter.tanggal');
+        Route::post('/fiter/text', [ReportController::class, 'filter_txt'])->name('laporan.filter.text');
     });
     Route::prefix('payment-gateway/')->group(function() {
         Route::get('/', [MidtransController::class, 'index'])->name('midtrans.index');
@@ -96,12 +101,28 @@ Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(funct
         Route::post('/turn-off', [MidtransController::class, 'turn_off'])->name('midtrans.turn.off');
         // Route::get('/callback-page', [MidtransController::class, 'callback_show'])->name('callback.show');
         // Route::post('/callback', [MidtransController::class, 'callback'])->name('callback');
+        Route::get('/callback-midtrans', [MidtransController::class, 'callback_show'])->name('midtrans.callback.show');
     });
     Route::prefix('berita/')->group(function() {
         Route::get('/', [NewsController::class, 'index'])->name('news.index');
         Route::post('/berita-create', [NewsController::class, 'store'])->name('news.create');
         Route::get('/berita-create', [NewsController::class, 'show'])->name('news.show');
         Route::post('/berita-delete/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+
+    });
+    Route::prefix('jurusan/')->group(function() {
+        Route::get('/', [MajorController::class, 'index'])->name('jurusan.index');
+        Route::get('/tambah', [MajorController::class, 'show'])->name('jurusan.show');
+
+        Route::post('/store', [MajorController::class, 'store'])->name('jurusan.store');
+        Route::post('/delete/{id}', [MajorController::class, 'destroy'])->name('jurusan.delete');
+
+    });
+    Route::prefix('kelas/')->group(function() {
+        Route::get('/', [ClassController::class, 'index'])->name('kelas.index');
+        Route::get('/tambah', [ClassController::class, 'show'])->name('kelas.show');
+        Route::post('/store', [ClassController::class, 'store'])->name('kelas.store');
+        Route::post('/delete/{id}', [ClassController::class, 'destroy'])->name('kelas.delete');
 
     });
 });

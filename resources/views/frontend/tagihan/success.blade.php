@@ -15,6 +15,8 @@
                 <li class="list-group-item">Subtotal : Rp. {{ number_format($detail->subtotal) }}</li>
             </ul>
         </div>
+        <hr>
+        <p><small>Note:* Pembayaran anda telah di terima dan akan di proses secara otomatis oleh sistem, silahkan tunggu 1x24 jam agar pihak bank dapat memverifikasi pembayaran anda.</small></p>
         <a href="{{ route('user.index')}}">Kembali</a>
     </div>
     

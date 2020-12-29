@@ -18,8 +18,9 @@
             </thead>
         <tbody>
             @foreach($tagihan as $num => $tagihans)
-            @csrf
+            
                 <form action="{{ route('user.payment') }}" method="post">
+                @csrf
                     <tr>
                         <td>{{ $num+1 }}</td>
                         <td>{{ $tagihans->getNameStudent($tagihans->student_id) }}</td>
@@ -39,7 +40,7 @@
             @endforeach
                 </tbody>
             </table>
-            <button class="btn btn-info" >Bayar Semua</button> / 
+            <button class="btn btn-info" >Bayar</button> / 
             <a href="{{ route('user.index') }}">Kembali</a>
             </form>
 

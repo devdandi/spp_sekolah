@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Student;
 use App\Models\Tunggakan;
+use App\Models\Configuration;
+
 
 
 class MonthlyBill extends Command
@@ -42,6 +44,7 @@ class MonthlyBill extends Command
     {
         // return 0;
         $student = Student::all();
+        $config = Configuration::first()->spp_bulanan;
         
         foreach($student as $stu)
         {
@@ -53,7 +56,7 @@ class MonthlyBill extends Command
                     'parent_id' => $stu->parent_id,
                     'student_id' => $stu->id,
                     'class_id' => $stu->class_id,
-                    'total' => 450000
+                    'total' => $config
                 ]);
             }
         }

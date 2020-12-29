@@ -4,6 +4,7 @@
 <div class="container valign">
     <div class="card mt-3">
         <div class="card-body">
+        <h2 class="text-center">Masuk</h2>
         @if($msg = session('success'))
       <div class="alert alert-success" role="alert">
          {{ $msg }}

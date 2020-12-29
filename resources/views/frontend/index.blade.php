@@ -1,6 +1,11 @@
 @extends('layouts.frontend')
 @section('title', 'Sekolah KU DAN KAMU')
 @section('content')
+@if(isset($_GET['page']))
+    @if($_GET['page'] == 0)
+        <script>window.location.href="{{ route('user.index') }}"</script>
+    @endif
+@endif
 <div class="container valign">
     <div class="card mt-1">
         <div class="card-header">
@@ -42,21 +47,30 @@
     <small><b>Pemberitahuan</b></small>
     <div class="card mt-1">
         <div class="card-body">
-            <ul class="list-group list-group-flush">
                 @foreach($new as $num => $news)
-                <li class="list-group-item">
-                <h5><a href="{{ route('pemberitahuan.index', $news->slug) }}">{{ $news->title }}</a></h5>
-                        <div class="float-right">
-                            <small>
-                                <i>{{ date('Y/m/d', strtotime($news->created_at)) }}</i>
-                            </small>
-                        </div>
-                        <hr>
-                        <h5></h5>
-                    </li>
-                @endforeach
-            </ul>
+                <div class="media">
+                <a href="{{ route('pemberitahuan.index', $news->slug) }}"><img class="align-self-start mr-3" src="{{ asset('storage/images') }}/{{$news->gambar}}" width="64" height="64" alt="Generic placeholder image"></a>
+                    <div class="media-body">
+                        <h5 class="mt-0"><a class="text-blue" href="{{ route('pemberitahuan.index', $news->slug) }}">{{ $news->title }}</a></h5>
+                        <small class="text-blue">Tanggal: {{ date('d/m/Y', strtotime($news->created_at)) }}</small>
+                    </div>
+                </div>
+                <hr>
+            @endforeach
+            <nav aria-label="...">
+        <ul class="pagination">
+            <li class="page-item">
+            <a class="page-link" href="?page={{$new->currentPage()-1}}" tabindex="-1">Kembali</a>
+            </li>
+            <li class="page-item">
+            <a class="page-link" href="{{ $new->nextPageUrl() }}">Selanjutnya</a>
+            </li>
+        </ul>
+    </nav>
         </div>
     </div>
+
+    
 </div>
+
 @endsection

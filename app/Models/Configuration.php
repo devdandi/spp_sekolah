@@ -12,6 +12,7 @@ class Configuration extends Model
         'client_key',
         'secret_key',
         'production',
-        'url'
+        'url',
+        'spp_bulanan'
     ];
 }
