@@ -48,8 +48,6 @@ Route::middleware('auth:parent')->group(function() {
             
         });
     });
-
-
 });
 
 Route::middleware(['auth:sanctum','verified'])->prefix('dashboard')->group(function() {

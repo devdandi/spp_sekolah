@@ -62,14 +62,16 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $parent->links()}}
         </div>
         <h4>Total: Rp. {{ number_format($total) }}</h4>
           
-        <form method="post" action="{{ route('tagihan.show.all', $parent->id) }}">
+        @if($parent->tunggakan->count() < 1)
+          @else
+          <form method="post" action="{{ route('tagihan.show.all', $parent->id) }}">
           @csrf 
           <button onclick="return confirm('Lanjutkan pelunasan ?') " class="btn btn-success">Bayar Semua</button>
         </form>  
+        @endif
     </div>
 </div>
 @endsection

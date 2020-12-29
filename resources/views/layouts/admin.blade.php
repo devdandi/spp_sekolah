@@ -207,12 +207,6 @@
                   <p>Dashboard</p>
                 </a>
               </li>  
-              <!-- <li class="nav-item">
-                <a href="{{ route('midtrans.callback.show') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Daftar Callback</p>
-                </a>
-              </li>       -->
                  
             </ul>
           </li>
@@ -318,7 +312,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pages/charts/chartjs.html" class="nav-link">
+                <a href="{{ route('profile.show') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Akun</p>
                 </a>
